@@ -9,11 +9,12 @@ import json
 import joblib
 import shutil
 import numpy as np
-
+#import tensorflow as tf
 import torch
 import os.path as osp, time, atexit, os
 import warnings
-from serialization_utils import convert_json
+from spinup.utils.mpi_tools import proc_id, mpi_statistics_scalar
+from spinup.utils.serialization_utils import convert_json
 
 color2num = dict(
     gray=30,
@@ -39,6 +40,33 @@ def colorize(string, color, bold=False, highlight=False):
     attr.append(str(num))
     if bold: attr.append('1')
     return '\x1b[%sm%s\x1b[0m' % (';'.join(attr), string)
+
+def restore_tf_graph(sess, fpath):
+    """
+    Loads graphs saved by Logger.
+
+    Will output a dictionary whose keys and values are from the 'inputs' 
+    and 'outputs' dict you specified with logger.setup_tf_saver().
+
+    Args:
+        sess: A Tensorflow session.
+        fpath: Filepath to save directory.
+
+    Returns:
+        A dictionary mapping from keys to tensors in the computation graph
+        loaded from ``fpath``. 
+    """
+    tf.saved_model.loader.load(
+                sess,
+                [tf.saved_model.tag_constants.SERVING],
+                fpath
+            )
+    model_info = joblib.load(osp.join(fpath, 'model_info.pkl'))
+    graph = tf.get_default_graph()
+    model = dict()
+    model.update({k: graph.get_tensor_by_name(v) for k,v in model_info['inputs'].items()})
+    model.update({k: graph.get_tensor_by_name(v) for k,v in model_info['outputs'].items()})
+    return model
 
 class Logger:
     """
@@ -337,7 +365,7 @@ class EpochLogger(Logger):
         else:
             v = self.epoch_dict[key]
             vals = np.concatenate(v) if isinstance(v[0], np.ndarray) and len(v[0].shape)>0 else v
-            stats = statistics_scalar(vals, with_min_and_max=with_min_and_max)
+            stats = mpi_statistics_scalar(vals, with_min_and_max=with_min_and_max)
             super().log_tabular(key if average_only else 'Average' + key, stats[0])
             if not(average_only):
                 super().log_tabular('Std'+key, stats[1])
@@ -352,27 +380,4 @@ class EpochLogger(Logger):
         """
         v = self.epoch_dict[key]
         vals = np.concatenate(v) if isinstance(v[0], np.ndarray) and len(v[0].shape)>0 else v
-        return statistics_scalar(vals)
-
-
-def statistics_scalar(x, with_min_and_max=False):
-    """
-    Get mean/std and optional min/max of scalar x.
-
-    Args:
-        x: An array containing samples of the scalar to produce statistics
-            for.
-
-        with_min_and_max (bool): If true, return min and max of x in 
-            addition to mean and std.
-    """
-    x = np.array(x, dtype=np.float32)
-    mean = np.average(x)
-
-    std = np.std(x)  # compute global std
-
-    if with_min_and_max:
-        global_min = np.min(x)
-        global_max = np.max(x)
-        return mean, std, global_min, global_max
-    return mean, std
+        return mpi_statistics_scalar(vals)

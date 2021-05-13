@@ -1,0 +1,25 @@
+{
+    "exp_name":	"Quad0",
+    "logger":	{
+        "<spinup.utils.logx.EpochLogger object at 0x7fb6b9b6ed50>":	{
+            "epoch_dict":	{},
+            "exp_name":	"Quad0",
+            "first_row":	true,
+            "log_current_row":	{},
+            "log_headers":	[],
+            "output_dir":	"/Users/fei/Desktop/coderepo/DRLUAV/data/Quad0/Quad0_s1",
+            "output_file":	{
+                "<_io.TextIOWrapper name='/Users/fei/Desktop/coderepo/DRLUAV/data/Quad0/Quad0_s1/progress.txt' mode='w' encoding='UTF-8'>":	{
+                    "mode":	"w"
+                }
+            }
+        }
+    },
+    "logger_kwargs":	{
+        "exp_name":	"Quad0",
+        "output_dir":	"/Users/fei/Desktop/coderepo/DRLUAV/data/Quad0/Quad0_s1"
+    },
+    "rcase":	1,
+    "seed":	1,
+    "setup_logger_kwargs":	"setup_logger_kwargs"
+}

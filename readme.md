@@ -12,7 +12,7 @@ pip install -r requirements.txt
 ```
 
 ## Activate Training process
-
+The neural nets model for actor neural net and critic neural net is in [model.py](https://github.com/ANCL/QuadPPO/blob/main/model.py). The leaning process is in [learn.py]()
 ```bash
 python learn.py --exp_name='Quad0' --seed=1
 ```
