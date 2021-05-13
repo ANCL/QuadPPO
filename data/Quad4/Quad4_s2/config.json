@@ -1,0 +1,25 @@
+{
+    "exp_name":	"Quad4",
+    "logger":	{
+        "<spinup.utils.logx.EpochLogger object at 0x2aba5ca02990>":	{
+            "epoch_dict":	{},
+            "exp_name":	"Quad4",
+            "first_row":	true,
+            "log_current_row":	{},
+            "log_headers":	[],
+            "output_dir":	"/project/6055904/zifei/UAVPPO/data/Quad4/Quad4_s2",
+            "output_file":	{
+                "<_io.TextIOWrapper name='/project/6055904/zifei/UAVPPO/data/Quad4/Quad4_s2/progress.txt' mode='w' encoding='UTF-8'>":	{
+                    "mode":	"w"
+                }
+            }
+        }
+    },
+    "logger_kwargs":	{
+        "exp_name":	"Quad4",
+        "output_dir":	"/project/6055904/zifei/UAVPPO/data/Quad4/Quad4_s2"
+    },
+    "rcase":	2,
+    "seed":	2,
+    "setup_logger_kwargs":	"setup_logger_kwargs"
+}
